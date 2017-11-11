@@ -6,4 +6,15 @@ This is to be a base for future project
 * REST API
 * JWT Authentication
 
+install
+-------
+    pip install -r requirements.txt
+run
+---
+	./manage.py runserver
+run tests
+---------
+    ./manage.py test
+
+  
 [![Build Status](https://travis-ci.org/spiralsyzygy/django-drf-base-app.svg?branch=master)](https://travis-ci.org/spiralsyzygy/django-drf-base-app)
