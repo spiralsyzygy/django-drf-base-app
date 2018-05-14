@@ -35,10 +35,10 @@ class UserAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create_user(
-            'foobar', email='foo@bar.com', password='password'
+            'foobarbaz', email='foo@bar.com', password='321password'
         )
         cls.super_user = User.objects.create_superuser(
-            'administrator', email='baz@buzz.com', password='secret'
+            'administrator', email='baz@buzz.com', password='secret00'
         )
 
     def test_00signup(self):
@@ -46,9 +46,9 @@ class UserAPITestCase(APITestCase):
         print "Testing Signup"
         response = client.post('/api/signup/',
                                {
-                                'username': 'user1',
-                                'email': 'email@email.com',
-                                'password': 'password',
+                                'username': 'username001',
+                                'email': 'email321@email.com',
+                                'password': '321password',
                                },
                                 format='json'
         )
@@ -58,15 +58,15 @@ class UserAPITestCase(APITestCase):
         print "Passed"
 
         print "Querying user by email"
-        user = User.objects.get(email="email@email.com")
-        self.assertEqual(user.username, "user1")
+        user = User.objects.get(email="email321@email.com")
+        self.assertEqual(user.username, "username001")
         print "Passed"
 
         response = client.post('/api/signup/',
                                {
-                                'username': 'user1',
+                                'username': 'username001',
                                 'email': 'email@email.com',
-                                'password': 'password',
+                                'password': '321password',
                                },
                                 format='json'
         )
@@ -74,7 +74,7 @@ class UserAPITestCase(APITestCase):
     def test_01login(self):
         print "Testing Login with bad password"
         response = self.client.post('/api/token-auth/', {
-            "username": "foobar",
+            "username": "foobarbaz",
             "password": "bad-pass"
         }, format='json')
         self.assertEqual(response.status_code, 400)
@@ -82,8 +82,8 @@ class UserAPITestCase(APITestCase):
 
         print "Testing Login"
         response = self.client.post('/api/token-auth/', {
-            "username": "foobar",
-            "password": "password"
+            "username": "foobarbaz",
+            "password": "321password"
         }, format='json')
 
         print "Checking for token"
@@ -95,17 +95,17 @@ class UserAPITestCase(APITestCase):
     def test_02change_password(self):
         print "Testing password change"
         self.assertTrue(self.client.login({
-            "username": "foobar",
-            "password": "password"
+            "username": "foobarbaz",
+            "password": "321password"
         }))
-        response = self.client.patch(reverse('api-password-change', kwargs={'pk': 1}),{"password": "password1"})
+        response = self.client.patch(reverse('api-password-change', kwargs={'pk': 1}),{"password": "password1234"})
         self.assertEqual(response.status_code, 204)
         print "Passed!"
 
         print "Testing Login with new password"
         response = self.client.post('/api/token-auth/', {
-            "username": "foobar",
-            "password": "password1"
+            "username": "foobarbaz",
+            "password": "password1234"
         }, format='json')
 
         print "Checking for token"

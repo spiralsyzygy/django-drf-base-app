@@ -20,15 +20,15 @@ class UserModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create_user(
-            'foobar', email='foo@bar.com', password='password'
+            'foobarbaz', email='foo@bar.com', password='password1234'
         )
         cls.super_user = User.objects.create_superuser(
-            'administrator', email='baz@buzz.com', password='secret'
+            'administrator', email='baz@buzz.com', password='secret001'
         )
 
     def test_users_created(self):
         assert(self.user.email == 'foo@bar.com')
-        assert(self.user.username == 'foobar')
+        assert(self.user.username == 'foobarbaz')
         assert(self.user.is_staff == False)
         assert(self.user.is_superuser == False)
 
@@ -41,23 +41,22 @@ class UserModelTest(TestCase):
     def test_signup(self):
         # This must exercise the entire model, form, view, url path
         response = self.client.post(reverse("signup"), {
-            "username": "user1",
+            "username": "username1",
             "email": "email@email.com",
-            "password1": "password",
-            "password2": "password"}
+            "password1": "password1234",
+            "password2": "password1234"}
         )
         user = User.objects.get(email="email@email.com")
-        self.assertEqual(user.username, "user1")
+        self.assertEqual(user.username, "username1")
         # if it's successful it redirects.
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, settings.SIGNUP_REDIRECT_URL)
 
     def test_login(self):
         response = self.client.post(settings.LOGIN_URL, {
-            "username": "foobar",
-            "password": "password"
+            "username": "foobarbaz",
+            "password": "password1234"
         })
-        # if it's successful it redirects.
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, settings.LOGIN_REDIRECT_URL)
 
@@ -69,15 +68,17 @@ class UserModelTest(TestCase):
     def test_password_change(self):
         # login
         response = self.client.post(settings.LOGIN_URL, {
-                    "username": "foobar",
-                    "password": "password"
+                    "username": "foobarbaz",
+                    "password": "password1234"
         })
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, settings.LOGIN_REDIRECT_URL)
+
         # change password
         response = self.client.post(reverse('password_change'), {
-                    "old_password": "password",
-                    "new_password1": "password1",
-                    "new_password2": "password1"
+                    "old_password": "password1234",
+                    "new_password1": "password4321",
+                    "new_password2": "password4321"
         })
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse('password_change_done'))
@@ -85,8 +86,8 @@ class UserModelTest(TestCase):
         response = self.client.post(settings.LOGOUT_URL)
         self.assertEqual(response.status_code, 302)
         response = self.client.post(settings.LOGIN_URL, {
-                    "username": "foobar",
-                    "password": "password1"
+                    "username": "foobarbaz",
+                    "password": "password4321"
         })
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, settings.LOGIN_REDIRECT_URL)

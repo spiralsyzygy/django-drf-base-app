@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
-from django.contrib.auth.validators import ASCIIUsernameValidator
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 # from .managers import UserManager
@@ -14,9 +14,9 @@ class User(AbstractUser):
     A fully featured User model with
     admin-compliant permissions.
 
-    Username and password are required. Other fields are optional.
+    Username, email, and password are required. Other fields are optional.
     """
-    username_validator = ASCIIUsernameValidator()
+    username_validator = UnicodeUsernameValidator()
 
     email = models.EmailField(_('email'), max_length=255, unique=True)
     last_login = models.DateTimeField(auto_now=True)
