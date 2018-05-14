@@ -4,7 +4,6 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView, UpdateAPIView
-from users.models import User
 from .serializers import (UserSerializer, GroupSerializer,
                           SignUpSerializer, PasswordChangeSerializer)
 from django.contrib.auth import get_user_model
@@ -19,7 +18,7 @@ class SignUpView(CreateAPIView):
     # model = User
     # queryset = User.objects.all()
     permission_classes = [
-        permissions.AllowAny # Or anon users can't register
+        permissions.AllowAny  # Or anon users can't register
     ]
     serializer_class = SignUpSerializer
 
@@ -52,6 +51,7 @@ class PasswordChangeView(UpdateAPIView):
         permissions.IsAuthenticated
     ]
     queryset = User.objects.all()
+
     def patch(self, request, pk, format=None):
         user = User.objects.get(pk=pk)
         if user == request.user:

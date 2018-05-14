@@ -6,4 +6,8 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User
 
 
-admin.site.register(User, UserAdmin)
+class MyUserAdmin(UserAdmin):
+    readonly_fields = ('last_login', 'date_joined')
+
+
+admin.site.register(User, MyUserAdmin)
